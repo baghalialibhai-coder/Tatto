@@ -42,7 +42,7 @@ class _CustomerConsentFormScreenState
   final _instagramController = TextEditingController();
 
   // Service Details
-  List<ServiceCategory> _selectedCategories = [];
+  ServiceCategory? _selectedCategory;
   final _serviceDescriptionController = TextEditingController();
   String _selectedArtistId = '';
   String _selectedArtistName = '';
@@ -168,7 +168,9 @@ class _CustomerConsentFormScreenState
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.existingForm != null ? 'Edit Consent Form' : 'New Consent Form',
+          widget.existingForm != null
+              ? 'Edit Consent Form'
+              : 'New Consent Form',
         ),
         backgroundColor: Colors.blue,
         foregroundColor: Colors.white,
@@ -185,37 +187,37 @@ class _CustomerConsentFormScreenState
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildHeader(),
-              _buildSection('1. BASIC CUSTOMER DETAILS'),
-              _buildCustomerDetails(),
-              _buildSection('2. SERVICE DETAILS'),
-              _buildServiceDetails(),
-              _buildSection('3. APPOINTMENT DETAILS'),
-              _buildAppointmentDetails(),
-              _buildSection('4. PAYMENT DETAILS'),
-              _buildPaymentDetails(),
-              _buildSection('5. MEDICAL & HEALTH CONDITIONS'),
-              _buildHealthConditions(),
-              _buildSection('6. CONSENT & ACKNOWLEDGEMENT'),
-              _buildConsent(),
-              _buildSection('7. DECLARATION & AGREEMENT'),
-              _buildDeclaration(),
-              _buildImportantNotice(),
-              _buildSection('8. FOR STUDIO USE ONLY'),
-              _buildStudioUse(),
-              const SizedBox(height: 24),
-              _buildSubmitButton(),
-              const SizedBox(height: 32),
-            ],
-          ),
-        ),
-      ),
+              padding: const EdgeInsets.all(16),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildHeader(),
+                    _buildSection('1. BASIC CUSTOMER DETAILS'),
+                    _buildCustomerDetails(),
+                    _buildSection('2. SERVICE DETAILS'),
+                    _buildServiceDetails(),
+                    _buildSection('3. APPOINTMENT DETAILS'),
+                    _buildAppointmentDetails(),
+                    _buildSection('4. PAYMENT DETAILS'),
+                    _buildPaymentDetails(),
+                    _buildSection('5. MEDICAL & HEALTH CONDITIONS'),
+                    _buildHealthConditions(),
+                    _buildSection('6. CONSENT & ACKNOWLEDGEMENT'),
+                    _buildConsent(),
+                    _buildSection('7. DECLARATION & AGREEMENT'),
+                    _buildDeclaration(),
+                    _buildImportantNotice(),
+                    _buildSection('8. FOR STUDIO USE ONLY'),
+                    _buildStudioUse(),
+                    const SizedBox(height: 24),
+                    _buildSubmitButton(),
+                    const SizedBox(height: 32),
+                  ],
+                ),
+              ),
+            ),
     );
   }
 
@@ -284,7 +286,8 @@ class _CustomerConsentFormScreenState
               hint: 'Enter Mobile Number',
               icon: Icons.phone,
               keyboardType: TextInputType.phone,
-              validator: (v) => v?.isEmpty ?? true ? 'Mobile is required' : null,
+              validator: (v) =>
+                  v?.isEmpty ?? true ? 'Mobile is required' : null,
             ),
             const SizedBox(height: 12),
             CustomTextField(
@@ -355,14 +358,18 @@ class _CustomerConsentFormScreenState
                   });
                 }
               },
-              validator: (v) => v?.isEmpty ?? true ? 'Please select a branch' : null,
+              validator: (v) =>
+                  v?.isEmpty ?? true ? 'Please select a branch' : null,
             ),
             const SizedBox(height: 12),
 
             // Selected Branch Info
             if (_selectedBranchName.isNotEmpty)
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
                 decoration: BoxDecoration(
                   color: Colors.blue.shade50,
                   borderRadius: BorderRadius.circular(8),
@@ -370,7 +377,11 @@ class _CustomerConsentFormScreenState
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.location_on, size: 16, color: Colors.blue.shade700),
+                    Icon(
+                      Icons.location_on,
+                      size: 16,
+                      color: Colors.blue.shade700,
+                    ),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Column(
@@ -409,7 +420,8 @@ class _CustomerConsentFormScreenState
               hint: 'Enter Details',
               icon: Icons.description,
               maxLines: 3,
-              validator: (v) => v?.isEmpty ?? true ? 'Description is required' : null,
+              validator: (v) =>
+                  v?.isEmpty ?? true ? 'Description is required' : null,
             ),
             const SizedBox(height: 12),
 
@@ -420,7 +432,9 @@ class _CustomerConsentFormScreenState
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.person),
               ),
-              value: _selectedArtistName.isNotEmpty ? _selectedArtistName : null,
+              value: _selectedArtistName.isNotEmpty
+                  ? _selectedArtistName
+                  : null,
               items: _getFilteredArtists().map((artist) {
                 return DropdownMenuItem(
                   value: artist.name,
@@ -473,7 +487,8 @@ class _CustomerConsentFormScreenState
                   });
                 }
               },
-              validator: (v) => v?.isEmpty ?? true ? 'Please select an artist' : null,
+              validator: (v) =>
+                  v?.isEmpty ?? true ? 'Please select an artist' : null,
             ),
           ],
         ),
@@ -528,12 +543,12 @@ class _CustomerConsentFormScreenState
           ),
           boxShadow: isSelected
               ? [
-            BoxShadow(
-              color: Colors.blue.shade200,
-              blurRadius: 8,
-              spreadRadius: 2,
-            ),
-          ]
+                  BoxShadow(
+                    color: Colors.blue.shade200,
+                    blurRadius: 8,
+                    spreadRadius: 2,
+                  ),
+                ]
               : null,
         ),
         child: Row(
@@ -580,9 +595,12 @@ class _CustomerConsentFormScreenState
 
   List<ArtistModel> _getFilteredArtists() {
     if (_selectedBranchId.isEmpty) return _artists;
-    return _artists.where((artist) =>
-    artist.branchId == _selectedBranchId || artist.branchId.isEmpty
-    ).toList();
+    return _artists
+        .where(
+          (artist) =>
+              artist.branchId == _selectedBranchId || artist.branchId.isEmpty,
+        )
+        .toList();
   }
 
   // ============================================================
@@ -641,7 +659,8 @@ class _CustomerConsentFormScreenState
               icon: Icons.currency_rupee,
               keyboardType: TextInputType.number,
               onChanged: (_) => _updateFinalAmount(),
-              validator: (v) => v?.isEmpty ?? true ? 'Amount is required' : null,
+              validator: (v) =>
+                  v?.isEmpty ?? true ? 'Amount is required' : null,
             ),
             const SizedBox(height: 12),
             CustomTextField(
@@ -661,7 +680,8 @@ class _CustomerConsentFormScreenState
               keyboardType: TextInputType.number,
               readOnly: true,
               fillColor: Colors.grey.shade100,
-              validator: (v) => v?.isEmpty ?? true ? 'Final amount is required' : null,
+              validator: (v) =>
+                  v?.isEmpty ?? true ? 'Final amount is required' : null,
             ),
             const SizedBox(height: 12),
             const Text(
@@ -712,7 +732,8 @@ class _CustomerConsentFormScreenState
                 );
               }).toList(),
               onChanged: (value) {
-                if (value != null) setState(() => _selectedPaymentStatus = value);
+                if (value != null)
+                  setState(() => _selectedPaymentStatus = value);
               },
             ),
             const SizedBox(height: 12),
@@ -765,7 +786,9 @@ class _CustomerConsentFormScreenState
               spacing: 8,
               runSpacing: 8,
               children: allConditions.map((condition) {
-                final isSelected = _selectedHealthConditions.contains(condition);
+                final isSelected = _selectedHealthConditions.contains(
+                  condition,
+                );
                 return FilterChip(
                   label: Text(condition),
                   selected: isSelected,
@@ -825,22 +848,22 @@ class _CustomerConsentFormScreenState
             _buildCheckboxTile(
               'I confirm that I am 18 years or older.',
               _consentConfirmed,
-                  (v) => setState(() => _consentConfirmed = v ?? false),
+              (v) => setState(() => _consentConfirmed = v ?? false),
             ),
             _buildCheckboxTile(
               'I confirm that I have read and understood the information about the service, risks, aftercare and instructions.',
               _consentConfirmed,
-                  (v) => setState(() => _consentConfirmed = v ?? false),
+              (v) => setState(() => _consentConfirmed = v ?? false),
             ),
             _buildCheckboxTile(
               'I agree to the terms & conditions.',
               _consentConfirmed,
-                  (v) => setState(() => _consentConfirmed = v ?? false),
+              (v) => setState(() => _consentConfirmed = v ?? false),
             ),
             _buildCheckboxTile(
               'I understand that results may vary from person to person.',
               _consentConfirmed,
-                  (v) => setState(() => _consentConfirmed = v ?? false),
+              (v) => setState(() => _consentConfirmed = v ?? false),
             ),
             const SizedBox(height: 12),
             Row(
@@ -887,7 +910,8 @@ class _CustomerConsentFormScreenState
                       label: const Text('Photo Added'),
                       avatar: const Icon(Icons.check, color: Colors.green),
                       deleteIcon: const Icon(Icons.close, size: 16),
-                      onDeleted: () => setState(() => _customerPhotoFile = null),
+                      onDeleted: () =>
+                          setState(() => _customerPhotoFile = null),
                     ),
                 ],
               ),
@@ -957,8 +981,8 @@ class _CustomerConsentFormScreenState
           SizedBox(height: 8),
           Text(
             'To Ensure the Best Results & Maintain The Quality Of Our Service,\n'
-                'The Purchase Of Aftercare Products Valued At 500 INR is Mandatory,\n'
-                'By Proceeding With Our Service, You Agree To This Condition.',
+            'The Purchase Of Aftercare Products Valued At 500 INR is Mandatory,\n'
+            'By Proceeding With Our Service, You Agree To This Condition.',
             style: TextStyle(fontSize: 12),
           ),
           SizedBox(height: 8),
@@ -1005,11 +1029,14 @@ class _CustomerConsentFormScreenState
                       prefixIcon: Icon(Icons.payment),
                     ),
                     value: _selectedPaymentMode,
-                    items: ['Cash', 'UPI', 'Card', 'Online', 'Other'].map((mode) {
+                    items: ['Cash', 'UPI', 'Card', 'Online', 'Other'].map((
+                      mode,
+                    ) {
                       return DropdownMenuItem(value: mode, child: Text(mode));
                     }).toList(),
                     onChanged: (value) {
-                      if (value != null) setState(() => _selectedPaymentMode = value);
+                      if (value != null)
+                        setState(() => _selectedPaymentMode = value);
                     },
                   ),
                 ),
@@ -1049,12 +1076,15 @@ class _CustomerConsentFormScreenState
                       border: OutlineInputBorder(),
                       prefixIcon: Icon(Icons.person),
                     ),
-                    value: _selectedReceivedBy.isNotEmpty ? _selectedReceivedBy : null,
+                    value: _selectedReceivedBy.isNotEmpty
+                        ? _selectedReceivedBy
+                        : null,
                     items: _artistNames.map((name) {
                       return DropdownMenuItem(value: name, child: Text(name));
                     }).toList(),
                     onChanged: (value) {
-                      if (value != null) setState(() => _selectedReceivedBy = value);
+                      if (value != null)
+                        setState(() => _selectedReceivedBy = value);
                     },
                   ),
                 ),
@@ -1081,7 +1111,9 @@ class _CustomerConsentFormScreenState
 
   Widget _buildSubmitButton() {
     return CustomButton(
-      text: widget.existingForm != null ? 'Update Consent Form' : 'Submit Consent Form',
+      text: widget.existingForm != null
+          ? 'Update Consent Form'
+          : 'Submit Consent Form',
       isLoading: _isSubmitting,
       onPressed: _submitForm,
       backgroundColor: Colors.blue,
@@ -1093,7 +1125,11 @@ class _CustomerConsentFormScreenState
   // Helper Widgets
   // ============================================================
 
-  Widget _buildCheckboxTile(String title, bool value, Function(bool?) onChanged) {
+  Widget _buildCheckboxTile(
+    String title,
+    bool value,
+    Function(bool?) onChanged,
+  ) {
     return CheckboxListTile(
       title: Text(title, style: const TextStyle(fontSize: 14)),
       value: value,
@@ -1138,7 +1174,8 @@ class _CustomerConsentFormScreenState
       final ampm = picked.hour >= 12 ? 'PM' : 'AM';
       final hour = picked.hour > 12 ? picked.hour - 12 : picked.hour;
       setState(() {
-        _selectedTime = '${hour.toString().padLeft(2, '0')}:${picked.minute.toString().padLeft(2, '0')} $ampm';
+        _selectedTime =
+            '${hour.toString().padLeft(2, '0')}:${picked.minute.toString().padLeft(2, '0')} $ampm';
       });
     }
   }
@@ -1150,9 +1187,9 @@ class _CustomerConsentFormScreenState
   }
 
   Future<void> _pickPhoto() async {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Photo picker coming soon!')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Photo picker coming soon!')));
   }
 
   // ============================================================
@@ -1252,10 +1289,7 @@ class _CustomerConsentFormScreenState
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error: $e'),
-            backgroundColor: Colors.red,
-          ),
+          SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
         );
       }
     } finally {
@@ -1285,6 +1319,9 @@ class _CustomerConsentFormScreenState
     } else if (_selectedArtistName.isEmpty) {
       isValid = false;
       errorMessage = 'Please select an artist';
+    } else if (_selectedCategory == null) {
+      isValid = false;
+      errorMessage = 'Please select a service category';
     } else if (_serviceDescriptionController.text.trim().isEmpty) {
       isValid = false;
       errorMessage = 'Service description is required';
@@ -1298,10 +1335,7 @@ class _CustomerConsentFormScreenState
 
     if (!isValid && showErrors) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(errorMessage),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text(errorMessage), backgroundColor: Colors.red),
       );
     }
 
@@ -1325,8 +1359,8 @@ class _CustomerConsentFormScreenState
 
     final service = ServiceModel(
       id: widget.existingForm?.service.id ?? '',
-      category: _selectedCategory,
-      name: _selectedCategory.label,
+      category: _selectedCategory!,
+      name: _selectedCategory!.label,
       description: _serviceDescriptionController.text.trim(),
       basePrice: double.tryParse(_totalAmountController.text) ?? 0,
       createdAt: DateTime.now(),
@@ -1380,7 +1414,9 @@ class _CustomerConsentFormScreenState
       aftercareReceived: false,
       isDraft: isDraft,
       status: isDraft ? 'draft' : 'submitted',
-      notes: _notesController.text.trim().isNotEmpty ? _notesController.text.trim() : null,
+      notes: _notesController.text.trim().isNotEmpty
+          ? _notesController.text.trim()
+          : null,
       createdAt: widget.existingForm?.createdAt ?? DateTime.now(),
       submittedAt: isDraft ? null : DateTime.now(),
     );
